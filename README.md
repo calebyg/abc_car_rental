@@ -41,7 +41,7 @@ This app provides an intuitive interface to create, retrieve, update, and delete
 - `mileage` Last recorded miles of the vehicle.
 - `status` Current status of the vehicle. 'Available', 'Rented', 'Maintenance'.
 - `fuel_type` Type of fuel of the vehicle. 'H' hybrid 'G' gas 'E' electric.
-- `fuel_level` Last recorded gas level (0-8).
+- `fuel_level` Last recorded gas level (0-100).
 - `ev_charge_percentage` Last recorded charge level for hybrid and electric vehicles.
 - `last_rental_id` Last customer who rented this vehicle.
 
@@ -54,7 +54,7 @@ This app provides an intuitive interface to create, retrieve, update, and delete
   "year": 2020,
   "mileage": 25000,
   "status": "Available",
-  "ev_charge_percentage": 80,
+  "ev_charge_percentage": 0,
   "last_rental_id": null,
   "fuel_type": "G",
   "fuel_level": 100
