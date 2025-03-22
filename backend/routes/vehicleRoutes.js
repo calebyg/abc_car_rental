@@ -25,7 +25,7 @@ router.get("/:id", async (req, res) => {
 
         // Vehicle not found
         if(result.rows.length === 0) {
-            return res.status(404).json({error: "Vehicle not found" });
+            return res.status(404).json({error: `Vehicle id ${id} not found` });
         }
 
         res.status(200).json(result.rows[0]);

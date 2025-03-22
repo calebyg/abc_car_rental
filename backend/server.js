@@ -3,9 +3,13 @@ const app = express();
 const pool = require('./db');
 const vehicleRoutes = require('./routes/vehicleRoutes.js');
 const rentalRoutes = require('./routes/rentalRoutes.js');
+const cors = require('cors');
 
 // Middleware to parse JSON
 app.use(express.json());
+
+// Allows frontend to make requests to backend
+app.use(cors());
 
 // Routes
 app.use('/vehicles', vehicleRoutes);
