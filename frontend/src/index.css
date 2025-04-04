@@ -41,3 +41,12 @@
   padding: 8px;
   cursor: pointer;
 }
+
+.rental-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  background: #f9f9f9;
+}
+

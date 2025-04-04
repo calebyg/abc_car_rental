@@ -4,24 +4,39 @@ import React, { useState } from "react";
 // onClose hides the modal when the user clicks Cancel or saves
 
 const RentalForm = ({ onClose, onSave }) => {
-  const [rentalData, setRentalData] = useState({
+  const [formData, setFormData] = useState({
     rentalId: "",
     vehicleId: "",
     carName: "",
     customerName: "",
     fuelLevel: "",
     chargeLevel: "",
-    status: "",
     notes: "",
   });
 
   const handleChange = (e) => {
-    setRentalData({ ...rentalData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ id: Date.now().toString(), ...rentalData });
+
+    if (!formData.rentalId || !formData.notes) {
+      alert("Rental ID and Notes are required!");
+      return;
+    }
+
+    const newRental = {
+      id: Date.now().toString(),
+      status: "Active", // Required
+      ...formData,
+    };
+
+    onSave(newRental);
     onClose();
   };
 
@@ -34,7 +49,7 @@ const RentalForm = ({ onClose, onSave }) => {
           <input
             type="text"
             name="rentalId"
-            value={rentalData.rentalId}
+            value={formData.rentalId}
             onChange={handleChange}
             required
           />
@@ -43,52 +58,48 @@ const RentalForm = ({ onClose, onSave }) => {
           <input
             type="text"
             name="vehicleId"
-            value={rentalData.vehicleId}
+            value={formData.vehicleId}
             onChange={handleChange}
-            required
           />
 
           <label>Car Name:</label>
           <input
             type="text"
             name="carName"
-            value={rentalData.carName}
+            value={formData.carName}
             onChange={handleChange}
-            required
           />
 
           <label>Customer Name:</label>
           <input
             type="text"
             name="customerName"
-            value={rentalData.customerName}
+            value={formData.customerName}
             onChange={handleChange}
-            required
           />
 
           <label>Fuel Level:</label>
           <input
             type="text"
             name="fuelLevel"
-            value={rentalData.fuelLevel}
+            value={formData.fuelLevel}
             onChange={handleChange}
-            required
           />
 
           <label>Charge Level:</label>
           <input
             type="text"
             name="chargeLevel"
-            value={rentalData.chargeLevel}
+            value={formData.chargeLevel}
             onChange={handleChange}
-            required
           />
 
           <label>Notes:</label>
           <textarea
             name="notes"
-            value={rentalData.notes}
+            value={formData.notes}
             onChange={handleChange}
+            required
           ></textarea>
 
           <button type="submit">Save Rental</button>

@@ -3,11 +3,13 @@
 A React app to help employees add, modify, and delete rental agreements.
 
 ## Purpose
+
 This app is used to handle batches of rental agreements that have unique problems to be fixed. By storing a list of different rentals and notes that describe what needs to be fixed, the employee saves a lot of time and confusion.
 
 ## Rentals
 
 ### Fields:
+
 - `rentalId`: Unique rental agreement number.
 - `vehicleId`: Vehicle number used for the rental agreement.
 - `carName`: Car make and model.
@@ -17,6 +19,7 @@ This app is used to handle batches of rental agreements that have unique problem
 - `notes`: Specific issues with the rental agreement
 
 ### Example Rental Data:
+
 ```json
 {
   "rentalId": 11806794,
@@ -28,3 +31,11 @@ This app is used to handle batches of rental agreements that have unique problem
   "notes": "Remove extra fuel charge"
 }
 ```
+
+### 4/4 Update
+
+Added components to add and view rental tickets.
+
+![Add Rental Ticket](public/screenshots/abc_2.png)
+
+![View Rental Tickets](public/screenshots/abc_1.png)

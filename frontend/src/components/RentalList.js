@@ -12,17 +12,45 @@ const RentalList = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    setRentals(getRentals());
+    setRentals(getRentals().filter((r) => r.status === "Active"));
   }, []);
 
   const handleSaveRental = (newRental) => {
     addRental(newRental);
-    setRentals(getRentals()); // Refresh UI
+    setRentals(getRentals().filter((rental) => rental.status === "Active"));
+  };
+
+  const handleComplete = (id) => {
+    updateRental(id, { status: "Complete" });
+    setRentals(getRentals().filter((rental) => rental.status === "Active"));
+  };
+
+  const handleDelete = (id) => {
+    deleteRental(id);
+    setRentals(getRentals().filter((rental) => rental.status === "Active"));
+  };
+
+  const renderRentalDetails = (rental) => {
+    const displayFields = Object.entries(rental).filter(([key, value]) => {
+      const required = key === "rentalId" || key === "notes";
+      const notEmpty = value !== "" && value !== null && value !== undefined;
+      return required || notEmpty;
+    });
+
+    return (
+      <ul>
+        {displayFields.map(([key, value]) => (
+          <li key={key}>
+            <strong>{key}:</strong> {value}
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
     <div>
-      <h2>My Rentals</h2>
+      <h2>Active Rental Tickets</h2>
       <button onClick={() => setShowModal(true)}>Add Rental</button>
 
       {showModal && (
@@ -32,20 +60,17 @@ const RentalList = () => {
         />
       )}
 
-      <ul>
-        {rentals.map((rental) => (
-          <li key={rental.id}>
-            <strong>{rental.carModel}</strong> - {rental.customerName} (
-            {rental.status})
-            <button
-              onClick={() => updateRental(rental.id, { status: "Complete" })}
-            >
-              Complete
-            </button>
-            <button onClick={() => deleteRental(rental.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      {rentals.length === 0 && <p>No active rentals.</p>}
+
+      {rentals.map((rental) => (
+        <div key={rental.id} className="rental-card">
+          {renderRentalDetails(rental)}
+          <button onClick={() => handleComplete(rental.id)}>
+            Mark as Complete
+          </button>
+          <button onClick={() => handleDelete(rental.id)}>Delete</button>
+        </div>
+      ))}
     </div>
   );
 };
