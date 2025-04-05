@@ -36,6 +36,6 @@ This app is used to handle batches of rental agreements that have unique problem
 
 Added components to add and view rental tickets.
 
-![Add Rental Ticket](public/screenshots/abc_2.png)
+![Add Rental Ticket](./frontend/public/screenshots/abc_2.png)
 
-![View Rental Tickets](public/screenshots/abc_1.png)
+![View Rental Tickets](./frontend/public/screenshots/abc_1.png)
