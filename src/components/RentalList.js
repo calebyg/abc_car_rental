@@ -10,22 +10,44 @@ import RentalForm from "./RentalForm";
 const RentalList = () => {
   const [rentals, setRentals] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedRental, setSelectedRental] = useState(null);
 
+  // Load rentals from localStorage on first render
   useEffect(() => {
-    setRentals(getRentals().filter((r) => r.status === "Active"));
+    const storedRentals = JSON.parse(localStorage.getItem("rentals")) || [];
+    setRentals(storedRentals);
   }, []);
 
-  const handleSaveRental = (newRental) => {
-    addRental(newRental);
-    setRentals(getRentals().filter((rental) => rental.status === "Active"));
+  // Add a new rental
+  const handleAddRental = (newRental) => {
+    const updatedRentals = [...rentals, newRental];
+    setRentals(updatedRentals);
+    localStorage.setItem("rentals", JSON.stringify(updatedRentals));
+    setShowModal(false);
   };
 
-  const handleComplete = (id) => {
-    updateRental(id, { status: "Complete" });
-    setRentals(getRentals().filter((rental) => rental.status === "Active"));
+  // Update existing rental
+  const handleUpdateRental = (updatedRental) => {
+    const updatedRentals = rentals.map((rental) =>
+      rental.id === updatedRental.id ? updatedRental : rental
+    );
+    setRentals(updatedRentals);
+    localStorage.setItem("rentals", JSON.stringify(updatedRentals));
+    setSelectedRental(null);
   };
 
-  const handleDelete = (id) => {
+  // Show EditRental form when user clicks "Edit"
+  const handleEditRental = (id) => {
+    const rentalToEdit = rentals.find((rental) => rental.id === id);
+    setSelectedRental(rentalToEdit);
+  };
+
+  // Cancel editing
+  const handleCancel = () => {
+    setSelectedRental(null);
+  };
+
+  const handleDeleteRental = (id) => {
     deleteRental(id);
     setRentals(getRentals().filter((rental) => rental.status === "Active"));
   };
@@ -56,7 +78,15 @@ const RentalList = () => {
       {showModal && (
         <RentalForm
           onClose={() => setShowModal(false)}
-          onSave={handleSaveRental}
+          onSave={handleAddRental} // Use add for new rentals
+        />
+      )}
+
+      {selectedRental && (
+        <RentalForm
+          rental={selectedRental}
+          onSave={handleUpdateRental} // Use update for editing
+          onClose={handleCancel}
         />
       )}
 
@@ -65,10 +95,8 @@ const RentalList = () => {
       {rentals.map((rental) => (
         <div key={rental.id} className="rental-card">
           {renderRentalDetails(rental)}
-          <button onClick={() => handleComplete(rental.id)}>
-            Mark as Complete
-          </button>
-          <button onClick={() => handleDelete(rental.id)}>Delete</button>
+          <button onClick={() => handleEditRental(rental.id)}>Edit</button>
+          <button onClick={() => handleDeleteRental(rental.id)}>Close</button>
         </div>
       ))}
     </div>

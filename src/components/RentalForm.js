@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // onSave sends the rental data to the parent component
 // onClose hides the modal when the user clicks Cancel or saves
 
-const RentalForm = ({ onClose, onSave }) => {
+const RentalForm = ({ rental, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     rentalId: "",
     vehicleId: "",
@@ -13,6 +13,13 @@ const RentalForm = ({ onClose, onSave }) => {
     chargeLevel: "",
     notes: "",
   });
+
+  // If editing, prefill form with existing rental data
+  useEffect(() => {
+    if (rental) {
+      setFormData(rental);
+    }
+  }, [rental]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
