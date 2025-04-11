@@ -20,7 +20,12 @@ const RentalList = () => {
 
   // Add a new rental
   const handleAddRental = (newRental) => {
-    const updatedRentals = [...rentals, newRental];
+    const rentalWithTimeStamp = {
+      ...newRental,
+      timestamp: new Date().toISOString(),
+    };
+
+    const updatedRentals = [...rentals, rentalWithTimeStamp];
     setRentals(updatedRentals);
     localStorage.setItem("rentals", JSON.stringify(updatedRentals));
     setShowModal(false);
@@ -29,7 +34,9 @@ const RentalList = () => {
   // Update existing rental
   const handleUpdateRental = (updatedRental) => {
     const updatedRentals = rentals.map((rental) =>
-      rental.id === updatedRental.id ? updatedRental : rental
+      rental.id === updatedRental.id
+        ? { ...updatedRental, timestamp: rental.timestamp }
+        : rental
     );
     setRentals(updatedRentals);
     localStorage.setItem("rentals", JSON.stringify(updatedRentals));
@@ -92,13 +99,15 @@ const RentalList = () => {
 
       {rentals.length === 0 && <p>No active rentals.</p>}
 
-      {rentals.map((rental) => (
-        <div key={rental.id} className="rental-card">
-          {renderRentalDetails(rental)}
-          <button onClick={() => handleEditRental(rental.id)}>Edit</button>
-          <button onClick={() => handleDeleteRental(rental.id)}>Close</button>
-        </div>
-      ))}
+      {[...rentals]
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .map((rental) => (
+          <div key={rental.id} className="rental-card">
+            {renderRentalDetails(rental)}
+            <button onClick={() => handleEditRental(rental.id)}>Edit</button>
+            <button onClick={() => handleDeleteRental(rental.id)}>Close</button>
+          </div>
+        ))}
     </div>
   );
 };
