@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import {
-  getRentals,
-  addRental,
-  deleteRental,
-  updateRental,
+  getTickets,
+  addTicket,
+  closeTicket,
+  updateTicket,
 } from "../utils/localStorage";
 import RentalForm from "./RentalForm";
+import StatsPanel from "./StatsPanel";
 
 const RentalList = () => {
   const [rentals, setRentals] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedRental, setSelectedRental] = useState(null);
+  const [tab, setTab] = useState("rentals"); // "rentals" or "stats"
 
   // Load rentals from localStorage on first render
   useEffect(() => {
@@ -23,6 +25,7 @@ const RentalList = () => {
     const rentalWithTimeStamp = {
       ...newRental,
       timestamp: new Date().toISOString(),
+      resolvedAt: "",
     };
 
     const updatedRentals = [...rentals, rentalWithTimeStamp];
@@ -32,7 +35,7 @@ const RentalList = () => {
   };
 
   // Update existing rental
-  const handleUpdateRental = (updatedRental) => {
+  const handleUpdateTicket = (updatedRental) => {
     const updatedRentals = rentals.map((rental) =>
       rental.id === updatedRental.id
         ? { ...updatedRental, timestamp: rental.timestamp }
@@ -44,7 +47,7 @@ const RentalList = () => {
   };
 
   // Show EditRental form when user clicks "Edit"
-  const handleEditRental = (id) => {
+  const handleEditTicket = (id) => {
     const rentalToEdit = rentals.find((rental) => rental.id === id);
     setSelectedRental(rentalToEdit);
   };
@@ -54,9 +57,10 @@ const RentalList = () => {
     setSelectedRental(null);
   };
 
-  const handleDeleteRental = (id) => {
-    deleteRental(id);
-    setRentals(getRentals().filter((rental) => rental.status === "Active"));
+  // Changes ticket status from "Active" to "Resolved"
+  const handleCloseTicket = (id) => {
+    closeTicket(id);
+    setRentals(getTickets().filter((rental) => rental.status === "Active"));
   };
 
   const renderRentalDetails = (rental) => {
@@ -79,35 +83,52 @@ const RentalList = () => {
 
   return (
     <div>
-      <h2>Active Rental Tickets</h2>
-      <button onClick={() => setShowModal(true)}>Add Rental</button>
+      <h2>Rental Management</h2>
 
-      {showModal && (
-        <RentalForm
-          onClose={() => setShowModal(false)}
-          onSave={handleAddRental} // Use add for new rentals
-        />
+      <div className="tab-buttons">
+        <button onClick={() => setTab("rentals")}>📄 Rental Tickets</button>
+        <button onClick={() => setTab("stats")}>📊 View Stats</button>
+      </div>
+
+      {tab === "rentals" && (
+        <>
+          <button onClick={() => setShowModal(true)}>Add Rental</button>
+
+          {showModal && (
+            <RentalForm
+              onClose={() => setShowModal(false)}
+              onSave={handleAddRental}
+            />
+          )}
+
+          {selectedRental && (
+            <RentalForm
+              rental={selectedRental}
+              onSave={handleUpdateTicket}
+              onClose={handleCancel}
+            />
+          )}
+
+          {rentals.length === 0 && <p>No active rentals.</p>}
+
+          {[...rentals]
+            .filter((rental) => rental.status === "Active")
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+            .map((rental) => (
+              <div key={rental.id} className="rental-card">
+                {renderRentalDetails(rental)}
+                <button onClick={() => handleEditTicket(rental.id)}>
+                  Edit
+                </button>
+                <button onClick={() => handleCloseTicket(rental.id)}>
+                  Close
+                </button>
+              </div>
+            ))}
+        </>
       )}
 
-      {selectedRental && (
-        <RentalForm
-          rental={selectedRental}
-          onSave={handleUpdateRental} // Use update for editing
-          onClose={handleCancel}
-        />
-      )}
-
-      {rentals.length === 0 && <p>No active rentals.</p>}
-
-      {[...rentals]
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-        .map((rental) => (
-          <div key={rental.id} className="rental-card">
-            {renderRentalDetails(rental)}
-            <button onClick={() => handleEditRental(rental.id)}>Edit</button>
-            <button onClick={() => handleDeleteRental(rental.id)}>Close</button>
-          </div>
-        ))}
+      {tab === "stats" && <StatsPanel rentals={rentals} />}
     </div>
   );
 };
