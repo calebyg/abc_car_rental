@@ -36,13 +36,13 @@ This app is used to handle batches of rental agreements that have unique problem
 
 ### 4/4 Update
 
-Added components to add and view rental tickets.
+- Added components to add and view rental tickets.
 
 ### 4/11 Update
 
 - Added functions to edit existing rentals and save it to local storage.
 - Added timestamps for each rental and sorted rental tickets by time.
 
-![Add Rental Ticket](./frontend/public/screenshots/abc_2.png)
+### 4/12 Update
 
-![View Rental Tickets](./frontend/public/screenshots/abc_1.png)
+- Created StatsPanel component to view active and resolved rental tickets.
