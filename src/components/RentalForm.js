@@ -12,6 +12,7 @@ const RentalForm = ({ rental, onClose, onSave }) => {
     fuelLevel: "",
     chargeLevel: "",
     notes: "",
+    ticketType: "",
   });
 
   // If editing, prefill form with existing rental data
@@ -52,6 +53,22 @@ const RentalForm = ({ rental, onClose, onSave }) => {
       <div className="modal-content">
         <h3>Add New Rental</h3>
         <form onSubmit={handleSubmit}>
+          <label>
+            Ticket Type:
+            <select
+              value={formData.ticketType}
+              onChange={(e) =>
+                setFormData({ ...formData, ticketType: e.target.value })
+              }
+              required
+            >
+              <option value="">Select type</option>
+              <option value="Price adjustment">Price adjustment</option>
+              <option value="EV charge">EV charge</option>
+              <option value="Miles">Miles</option>
+              <option value="Check-in">Check-in</option>
+            </select>
+          </label>
           <label>Rental ID:</label>
           <input
             type="text"
