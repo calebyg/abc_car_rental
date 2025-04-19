@@ -60,7 +60,7 @@ const RentalList = () => {
   // Changes ticket status from "Active" to "Resolved"
   const handleCloseTicket = (id) => {
     closeTicket(id);
-    setRentals(getTickets().filter((rental) => rental.status === "Active"));
+    setRentals(getTickets());
   };
 
   const renderRentalDetails = (rental) => {
