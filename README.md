@@ -76,3 +76,8 @@ This app is used to help employees handle batches of rental agreements that have
 
 - Fixed `rentals` rendering bug in StatsPanel
 - Added `ticketType` field to tickets
+
+### 4/24 Update
+
+- Added stats for ticket types
+- Added new style sheets
