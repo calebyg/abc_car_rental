@@ -44,3 +44,14 @@ export const closeTicket = (id) => {
   });
   saveTickets(rentals);
 };
+
+// Clears tickets cache: removes all "Resolved" tickets from local storage
+export const clearTicketCache = () => {
+  const tickets = getTickets();
+
+  const activeTickets = tickets.filter(
+    (ticket) => ticket.status !== "Resolved"
+  );
+
+  localStorage.setItem("rentals", JSON.stringify(activeTickets));
+};

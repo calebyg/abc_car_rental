@@ -7,6 +7,7 @@ import {
 } from "../utils/localStorage";
 import RentalForm from "./RentalForm";
 import StatsPanel from "./StatsPanel";
+import "../stylesheets/RentalList.css";
 
 const RentalList = () => {
   const [rentals, setRentals] = useState([]);
