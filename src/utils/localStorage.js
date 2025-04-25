@@ -54,4 +54,5 @@ export const clearTicketCache = () => {
   );
 
   localStorage.setItem("rentals", JSON.stringify(activeTickets));
+  return activeTickets; // Return the updated list
 };

@@ -64,18 +64,31 @@ const RentalList = () => {
     setRentals(getTickets());
   };
 
+  const fieldLabels = {
+    rentalId: "Rental ID",
+    vehicleId: "Vehicle ID",
+    carName: "Car name",
+    customerName: "Customer name",
+    fuelLevel: "Fuel level",
+    chargeLevel: "Charge level",
+    notes: "Notes",
+    ticketType: "Ticket type",
+    status: "Status",
+    timestamp: "Timestamp",
+  };
+
   const renderRentalDetails = (rental) => {
     const displayFields = Object.entries(rental).filter(([key, value]) => {
-      const required = key === "rentalId" || key === "notes";
       const notEmpty = value !== "" && value !== null && value !== undefined;
-      return required || notEmpty;
+      const isDisplayable = key !== "id" && fieldLabels[key];
+      return notEmpty && isDisplayable;
     });
 
     return (
       <ul>
         {displayFields.map(([key, value]) => (
           <li key={key}>
-            <strong>{key}:</strong> {value}
+            <strong>{fieldLabels[key]}:</strong> {value}
           </li>
         ))}
       </ul>
@@ -84,7 +97,7 @@ const RentalList = () => {
 
   return (
     <div>
-      <h2>Rental Management</h2>
+      <h2>Car Rental Tracker</h2>
 
       <div className="tab-buttons">
         <button onClick={() => setTab("rentals")}>📄 Rental Tickets</button>

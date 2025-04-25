@@ -1,8 +1,15 @@
-import React from "react";
-import { clearTicketCache } from "../utils/localStorage";
+import React, { useEffect, useState } from "react";
+import { clearTicketCache, getTickets } from "../utils/localStorage";
 import "../stylesheets/StatsPanel.css";
 
-const StatsPanel = ({ rentals }) => {
+const StatsPanel = ({ rentals: initialRentals }) => {
+  const [rentals, setRentals] = useState(initialRentals);
+
+  useEffect(() => {
+    setRentals(initialRentals);
+  }, [initialRentals]);
+
+  // Tickets created during a period
   const now = new Date();
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(now.getDate() - 7);
@@ -46,7 +53,13 @@ const StatsPanel = ({ rentals }) => {
         <li> 🚗 Fix miles: {milesTickets}</li>
         <li> ✅ Fix check-in {checkinTickets}</li>
       </ul>
-      <button type="button" onClick={clearTicketCache}>
+      <button
+        type="button"
+        onClick={() => {
+          clearTicketCache();
+          setRentals(getTickets()); // Re-fetch and update state
+        }}
+      >
         Clear cache
       </button>
     </div>

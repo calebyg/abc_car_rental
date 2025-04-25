@@ -81,3 +81,8 @@ This app is used to help employees handle batches of rental agreements that have
 
 - Added stats for ticket types
 - Added new style sheets
+
+### 4/25 Update
+
+- Added state for StatsPanel
+- Displayed fields properly in RentalList
