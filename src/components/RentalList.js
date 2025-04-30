@@ -8,6 +8,7 @@ import {
 import RentalForm from "./RentalForm";
 import StatsPanel from "./StatsPanel";
 import "../stylesheets/RentalList.css";
+import ExportTicketsButton from "./ExportTicketsButton";
 
 const RentalList = () => {
   const [rentals, setRentals] = useState([]);
@@ -102,6 +103,7 @@ const RentalList = () => {
       <div className="tab-buttons">
         <button onClick={() => setTab("rentals")}>📄 Rental Tickets</button>
         <button onClick={() => setTab("stats")}>📊 View Stats</button>
+        <ExportTicketsButton />
       </div>
 
       {tab === "rentals" && (

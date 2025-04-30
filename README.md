@@ -86,3 +86,7 @@ This app is used to help employees handle batches of rental agreements that have
 
 - Added state for StatsPanel
 - Displayed fields properly in RentalList
+
+### 4/30 Update
+
+- Added a component to export active tickets as a text file
