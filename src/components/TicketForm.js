@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../stylesheets/RentalForm.css";
 
-const RentalForm = ({ rental, onClose, onSave }) => {
+const TicketForm = ({ ticket, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     rentalId: "",
     vehicleId: "",
@@ -14,8 +14,8 @@ const RentalForm = ({ rental, onClose, onSave }) => {
   });
 
   useEffect(() => {
-    if (rental) setFormData(rental);
-  }, [rental]);
+    if (ticket) setFormData(ticket);
+  }, [ticket]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,19 +30,19 @@ const RentalForm = ({ rental, onClose, onSave }) => {
       return;
     }
 
-    const newRental = {
+    const newTicket = {
       id: Date.now().toString(),
       status: "Active",
       ...formData,
     };
 
-    onSave(newRental);
+    onSave(newTicket);
     onClose();
   };
 
   return (
     <div className="form-container">
-      <h3 className="form-title">Add New Rental</h3>
+      <h3 className="form-title">Add New Ticket</h3>
       <form onSubmit={handleSubmit}>
         <label>Ticket Type:</label>
         <select
@@ -116,12 +116,16 @@ const RentalForm = ({ rental, onClose, onSave }) => {
         ></textarea>
 
         <div className="form-actions">
-          <button type="submit" className="btn-primary">Save Rental</button>
-          <button type="button" className="btn-secondary" onClick={onClose}>Cancel</button>
+          <button type="submit" className="btn-primary">
+            Save Ticket
+          </button>
+          <button type="button" className="btn-secondary" onClick={onClose}>
+            Cancel
+          </button>
         </div>
       </form>
     </div>
   );
 };
 
-export default RentalForm;
+export default TicketForm;

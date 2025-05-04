@@ -1,10 +1,10 @@
 import React from "react";
-import RentalList from "./components/RentalList";
+import TicketList from "./components/TicketList";
 
 function App() {
   return (
     <div>
-      <RentalList />
+      <TicketList />
     </div>
   );
 }

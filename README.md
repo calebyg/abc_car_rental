@@ -90,3 +90,7 @@ This app is used to help employees handle batches of rental agreements that have
 ### 4/30 Update
 
 - Added a component to export active tickets as a text file
+
+### 5/3 Update
+
+- Synced tickets with StatsPanel component

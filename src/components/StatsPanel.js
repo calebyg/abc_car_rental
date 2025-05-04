@@ -2,39 +2,40 @@ import React, { useEffect, useState } from "react";
 import { clearTicketCache, getTickets } from "../utils/localStorage";
 import "../stylesheets/StatsPanel.css";
 
-const StatsPanel = ({ rentals: initialRentals }) => {
-  const [rentals, setRentals] = useState(initialRentals);
+const StatsPanel = ({ tickets: initialTickets }) => {
+  const [tickets, setTickets] = useState(initialTickets);
 
   useEffect(() => {
-    setRentals(initialRentals);
-  }, [initialRentals]);
+    const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
+    setTickets(storedTickets);
+  }, []);
 
   // Tickets created during a period
   const now = new Date();
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(now.getDate() - 7);
 
-  const activeTickets = rentals.filter((r) => r.status === "Active").length;
+  const activeTickets = tickets.filter((r) => r.status === "Active").length;
 
-  const resolvedTickets = rentals.filter((r) => r.status === "Resolved").length;
+  const resolvedTickets = tickets.filter((r) => r.status === "Resolved").length;
 
   // Total created tickets by ticket type
 
   // Price adjustment
-  const priceTickets = rentals.filter(
+  const priceTickets = tickets.filter(
     (r) => r.ticketType === "Price adjustment"
   ).length;
 
   // EV charge
-  const evChargeTickets = rentals.filter(
+  const evChargeTickets = tickets.filter(
     (r) => r.ticketType === "EV charge"
   ).length;
 
   // Miles
-  const milesTickets = rentals.filter((r) => r.ticketType === "Miles").length;
+  const milesTickets = tickets.filter((r) => r.ticketType === "Miles").length;
 
   // Check-in
-  const checkinTickets = rentals.filter(
+  const checkinTickets = tickets.filter(
     (r) => r.ticketType === "Check-in"
   ).length;
 
@@ -42,7 +43,7 @@ const StatsPanel = ({ rentals: initialRentals }) => {
     <div className="stats-panel">
       <h3>📊 Ticket Stats</h3>
       <ul>
-        <li>🎫 Total created: {rentals.length}</li>
+        <li>🎫 Total created: {tickets.length}</li>
         <li> 🟢 Active: {activeTickets}</li>
         <li> ✅ Resolved: {resolvedTickets}</li>
       </ul>
@@ -57,7 +58,7 @@ const StatsPanel = ({ rentals: initialRentals }) => {
         type="button"
         onClick={() => {
           clearTicketCache();
-          setRentals(getTickets()); // Re-fetch and update state
+          setTickets(getTickets()); // Re-fetch and update state
         }}
       >
         Clear cache

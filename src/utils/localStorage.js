@@ -1,48 +1,51 @@
 // Fetch all tickets from local storage
 export const getTickets = () => {
-  const rentals = localStorage.getItem("rentals");
-  return rentals ? JSON.parse(rentals) : [];
+  const tickets = localStorage.getItem("tickets");
+  return tickets ? JSON.parse(tickets) : [];
 };
 
 // Save updated tickets to local storage
-export const saveTickets = (rentals) => {
-  localStorage.setItem("rentals", JSON.stringify(rentals));
+export const saveTickets = (tickets) => {
+  localStorage.setItem("tickets", JSON.stringify(tickets));
 };
 
-// Add a new ticket
-export const addTicket = (rental) => {
-  const rentals = getTickets();
-  const newRental = {
+// Add a new ticket to local storage and return
+export const addTicket = (ticket) => {
+  const tickets = getTickets();
+  const newTicket = {
     id: Date.now().toString(), // Unique ID
+    timestamp: new Date().toISOString(),
     status: "Active", // Required!
-    ...rental,
+    resolvedAt: "",
+    ...ticket,
   };
-  rentals.push(newRental);
-  localStorage.setItem("rentals", JSON.stringify(rentals));
+  tickets.push(newTicket);
+  localStorage.setItem("tickets", JSON.stringify(tickets));
+  return newTicket;
 };
 
-// Update ticket details (e.g., status, notes)
+// Update ticket details
 export const updateTicket = (id, updatedData) => {
-  let rentals = getTickets();
-  rentals = rentals.map((rental) =>
-    rental.id === id ? { ...rental, ...updatedData } : rental
+  let tickets = getTickets();
+  tickets = tickets.map((ticket) =>
+    ticket.id === id ? { ...ticket, ...updatedData } : ticket
   );
-  saveTickets(rentals);
+  saveTickets(tickets);
 };
 
 // Close a ticket by updating its status to "Resolved"
 export const closeTicket = (id) => {
-  const rentals = getTickets().map((rental) => {
-    if (rental.id === id) {
+  const tickets = getTickets().map((ticket) => {
+    if (ticket.id === id) {
       return {
-        ...rental,
+        ...ticket,
         status: "Resolved",
         resolvedAt: new Date().toISOString(),
       };
     }
-    return rental;
+    return ticket;
   });
-  saveTickets(rentals);
+  saveTickets(tickets);
 };
 
 // Clears tickets cache: removes all "Resolved" tickets from local storage
@@ -53,6 +56,6 @@ export const clearTicketCache = () => {
     (ticket) => ticket.status !== "Resolved"
   );
 
-  localStorage.setItem("rentals", JSON.stringify(activeTickets));
+  localStorage.setItem("tickets", JSON.stringify(activeTickets));
   return activeTickets; // Return the updated list
 };

@@ -1,29 +1,29 @@
 // Component to view and edit rental tickets
 import React, { useEffect, useState } from "react";
 
-const EditRental = ({ rental, onSave }) => {
+const EditTicket = ({ ticket, onSave }) => {
   const [formData, setFormData] = useState({
-    rentalStatus: rental.status,
-    rentalNotes: rental.notes,
+    ticketStatus: ticket.status,
+    ticketNotes: ticket.notes,
   });
 
   useEffect(() => {
-    if (rental) {
+    if (ticket) {
       setFormData({
-        status: rental.status || '',
-        notes: rental.notes || '',
+        status: ticket.status || "",
+        notes: ticket.notes || "",
       });
     }
-  }, [rental]);
+  }, [ticket]);
 
   const handleChange = (e) => {
-    const {name, value} = e.target;
-    setFormData((prev) => ({...prev, [name]: value}));
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({...rental, ...formData});
+    onSave({ ...ticket, ...formData });
   };
   return (
     <div>
@@ -32,8 +32,8 @@ const EditRental = ({ rental, onSave }) => {
         <div>
           <label>Status:</label>
           <select
-            name="rentalStatus"
-            value={formData.rentalStatus}
+            name="ticketStatus"
+            value={formData.ticketStatus}
             onChange={handleChange}
           >
             <option value="active">Active</option>
@@ -44,8 +44,8 @@ const EditRental = ({ rental, onSave }) => {
         <div>
           <label>Notes:</label>
           <textarea
-            name="rentalNotes"
-            value={formData.rentalNotes}
+            name="ticketNotes"
+            value={formData.ticketNotes}
             onChange={handleChange}
           />
         </div>
@@ -55,4 +55,4 @@ const EditRental = ({ rental, onSave }) => {
   );
 };
 
-export default EditRental;
+export default EditTicket;
