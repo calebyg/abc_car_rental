@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   getTickets,
   addTicket,
   closeTicket,
   updateTicket,
+  getActiveTicketsByType,
+  getActiveTickets,
 } from "../utils/localStorage";
 import TicketForm from "./TicketForm";
 import StatsPanel from "./StatsPanel";
@@ -62,6 +64,17 @@ const TicketList = () => {
     setTickets(getTickets());
   };
 
+  // Filters tickets by ticket type
+  const handleTicketTypeChange = (event) => {
+    const value = event.target.value;
+    if (value === "All") {
+      setTickets(getActiveTickets());
+    } else {
+      const selectedTickets = getActiveTicketsByType(value);
+      setTickets(selectedTickets);
+    }
+  };
+
   const fieldLabels = {
     rentalId: "Rental ID",
     vehicleId: "Vehicle ID",
@@ -69,6 +82,7 @@ const TicketList = () => {
     customerName: "Customer name",
     fuelLevel: "Fuel level",
     chargeLevel: "Charge level",
+    miles: "Miles",
     notes: "Notes",
     ticketType: "Ticket type",
     status: "Status",
@@ -102,10 +116,32 @@ const TicketList = () => {
         <button onClick={() => setTab("stats")}>📊 View Stats</button>
         <ExportTicketsButton />
       </div>
+      <div>
+        Active tickets: {tickets.filter((t) => t.status === "Active").length};
+      </div>
+      <div>
+        Resolved tickets:{" "}
+        {tickets.filter((t) => t.status === "Resolved").length};
+      </div>
 
       {tab === "tickets" && (
         <>
           <button onClick={() => setShowModal(true)}>Add Ticket</button>
+          <label>
+            Ticket type:
+            <select
+              name="ticketType"
+              defaultValue="All"
+              onChange={handleTicketTypeChange}
+              multiple={false}
+            >
+              <option value="All">All</option>
+              <option value="Price adjustment">Price adjustment</option>
+              <option value="EV charge">EV charge</option>
+              <option value="Miles">Miles</option>
+              <option value="Check-in">Check-in</option>
+            </select>
+          </label>
 
           {showModal && (
             <TicketForm

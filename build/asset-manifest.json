@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/abc_car_rental/static/css/main.b4a0f716.css",
-    "main.js": "/abc_car_rental/static/js/main.04f8a00a.js",
+    "main.js": "/abc_car_rental/static/js/main.a83993d6.js",
     "index.html": "/abc_car_rental/index.html",
     "main.b4a0f716.css.map": "/abc_car_rental/static/css/main.b4a0f716.css.map",
-    "main.04f8a00a.js.map": "/abc_car_rental/static/js/main.04f8a00a.js.map"
+    "main.a83993d6.js.map": "/abc_car_rental/static/js/main.a83993d6.js.map"
   },
   "entrypoints": [
     "static/css/main.b4a0f716.css",
-    "static/js/main.04f8a00a.js"
+    "static/js/main.a83993d6.js"
   ]
 }

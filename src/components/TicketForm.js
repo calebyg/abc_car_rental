@@ -5,10 +5,10 @@ const TicketForm = ({ ticket, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     rentalId: "",
     vehicleId: "",
-    carName: "",
-    customerName: "",
-    fuelLevel: "",
-    chargeLevel: "",
+    gasFuelLevel: "",
+    evChargeLevel: "",
+    miles: "",
+    status: "Active",
     notes: "",
     ticketType: "",
   });
@@ -75,35 +75,27 @@ const TicketForm = ({ ticket, onClose, onSave }) => {
           onChange={handleChange}
         />
 
-        <label>Car Name:</label>
+        <label>Fuel Level (1-8):</label>
         <input
           type="text"
-          name="carName"
-          value={formData.carName}
+          name="gasFuelLevel"
+          value={formData.gasFuelLevel}
           onChange={handleChange}
         />
 
-        <label>Customer Name:</label>
+        <label>EV Charge Level (1-99):</label>
         <input
           type="text"
-          name="customerName"
-          value={formData.customerName}
+          name="evChargeLevel"
+          value={formData.evChargeLevel}
           onChange={handleChange}
         />
 
-        <label>Fuel Level:</label>
+        <label>Miles:</label>
         <input
           type="text"
-          name="fuelLevel"
-          value={formData.fuelLevel}
-          onChange={handleChange}
-        />
-
-        <label>Charge Level:</label>
-        <input
-          type="text"
-          name="chargeLevel"
-          value={formData.chargeLevel}
+          name="miles"
+          value={formData.miles}
           onChange={handleChange}
         />
 
