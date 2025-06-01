@@ -14,6 +14,8 @@ import ExportTicketsButton from "./ExportTicketsButton";
 
 const TicketList = () => {
   const [tickets, setTickets] = useState([]);
+  const [status, setStatus] = useState("Active");
+  const [ticketType, setTicketType] = useState("All");
   const [showModal, setShowModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [tab, setTab] = useState("tickets"); // "tickets" or "stats"
@@ -66,13 +68,33 @@ const TicketList = () => {
 
   // Filters tickets by ticket type
   const handleTicketTypeChange = (event) => {
-    const value = event.target.value;
-    if (value === "All") {
-      setTickets(getActiveTickets());
-    } else {
-      const selectedTickets = getActiveTicketsByType(value);
-      setTickets(selectedTickets);
+    const allTickets = getTickets();
+    if (event.target.value === "All")
+      setTickets(allTickets.filter((t) => t.status === status));
+    else {
+      setTickets(
+        allTickets.filter(
+          (t) => t.ticketType === event.target.value && t.status === status
+        )
+      );
+      setTicketType(event.target.value);
     }
+  };
+
+  // Filters tickets by status
+  // Handle when ticket type is "ALL"
+  const handleStatusChange = (event) => {
+    const allTickets = getTickets();
+    if (ticketType === "All")
+      setTickets(allTickets.filter((t) => t.status === event.target.value));
+    else
+      setTickets(
+        allTickets.filter(
+          (t) => t.status === event.target.value && t.ticketType === ticketType
+        )
+      );
+
+    setStatus(event.target.value);
   };
 
   const fieldLabels = {
@@ -113,7 +135,7 @@ const TicketList = () => {
 
       <div className="tab-buttons">
         <button onClick={() => setTab("tickets")}>📄 Rental Tickets</button>
-        <button onClick={() => setTab("stats")}>📊 View Stats</button>
+        {/* <button onClick={() => setTab("stats")}>📊 View Stats</button> */}
         <ExportTicketsButton />
       </div>
       <div>
@@ -127,6 +149,18 @@ const TicketList = () => {
       {tab === "tickets" && (
         <>
           <button onClick={() => setShowModal(true)}>Add Ticket</button>
+          <label>
+            Active or Resolved:
+            <select
+              name="isActive"
+              defaultValue="Active"
+              onChange={handleStatusChange}
+              multiple={false}
+            >
+              <option value="Active">Active</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </label>
           <label>
             Ticket type:
             <select
@@ -161,7 +195,6 @@ const TicketList = () => {
           {tickets.length === 0 && <p>No active tickets.</p>}
 
           {[...tickets]
-            .filter((ticket) => ticket.status === "Active")
             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
             .map((ticket) => (
               <div key={ticket.id} className="rental-card">
@@ -177,7 +210,7 @@ const TicketList = () => {
         </>
       )}
 
-      {tab === "stats" && <StatsPanel tickets={tickets} />}
+      {/* {tab === "stats" && <StatsPanel tickets={tickets} />} */}
     </div>
   );
 };
