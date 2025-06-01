@@ -136,7 +136,10 @@ const TicketList = () => {
       <div className="tab-buttons">
         <button onClick={() => setTab("tickets")}>📄 Rental Tickets</button>
         {/* <button onClick={() => setTab("stats")}>📊 View Stats</button> */}
-        <ExportTicketsButton />
+        <ExportTicketsButton
+          ticketStatusNow={status}
+          ticketTypeNow={ticketType}
+        />
       </div>
       <div>
         Active tickets: {tickets.filter((t) => t.status === "Active").length};

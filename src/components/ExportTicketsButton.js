@@ -1,17 +1,25 @@
-const ExportTicketsButton = () => {
+import { getTickets } from "../utils/localStorage.js";
+const ExportTicketsButton = ({ ticketStatusNow, ticketTypeNow }) => {
   const handleExport = () => {
-    const rentals = JSON.parse(localStorage.getItem("rentals")) || [];
-    const activeTickets = rentals.filter(
-      (ticket) => ticket.status === "Active"
-    );
+    const tickets = getTickets();
+    console.log(tickets);
+    console.log("ticketStatusNow:", ticketStatusNow);
+    console.log("ticketTypeNow:", ticketTypeNow);
+    const filteredTickets =
+      ticketTypeNow === "All"
+        ? tickets.filter((t) => t.status === ticketStatusNow)
+        : tickets.filter(
+            (t) =>
+              t.status === ticketStatusNow && t.ticketType === ticketTypeNow
+          );
 
-    if (activeTickets.length === 0) {
-      alert("No active tickets to export.");
+    if (filteredTickets.length < 1) {
+      alert("No tickets to export");
       return;
     }
 
     // Format tickets into readable text
-    const textContent = activeTickets
+    const textContent = filteredTickets
       .map((ticket, index) => {
         let entry = `Ticket #${index + 1}\n`;
         for (let key in ticket) {
@@ -29,7 +37,7 @@ const ExportTicketsButton = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "active-tickets-log.txt";
+    a.download = `${ticketStatusNow}-${ticketTypeNow}-${Date.now()}-log.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -37,7 +45,7 @@ const ExportTicketsButton = () => {
   // Helper function to capitalize field names
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-  return <button onClick={handleExport}>📩 Export Active Tickets</button>;
+  return <button onClick={handleExport}>📩 Export List</button>;
 };
 
 export default ExportTicketsButton;
