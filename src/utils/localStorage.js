@@ -4,6 +4,12 @@ export const getTickets = () => {
   return tickets ? JSON.parse(tickets) : [];
 };
 
+// Fetch ticket by id
+export const getTicketByID = (id) => {
+  const tickets = getTickets();
+  return tickets.find((t) => t.id === id);
+};
+
 // Fetch all active tickets
 export const getActiveTickets = () => {
   const tickets = getTickets();
@@ -75,7 +81,7 @@ export const updateTicket = (id, updatedData) => {
 };
 
 // Close a ticket by updating its status to "Resolved"
-export const closeTicket = (id) => {
+export const resolveTicket = (id) => {
   const tickets = getTickets().map((ticket) => {
     if (ticket.id === id) {
       return {
@@ -86,6 +92,12 @@ export const closeTicket = (id) => {
     }
     return ticket;
   });
+  saveTickets(tickets);
+};
+
+// Delete a ticket from memory
+export const deleteTicket = (id) => {
+  const tickets = getTickets().filter((t) => t.id !== id);
   saveTickets(tickets);
 };
 

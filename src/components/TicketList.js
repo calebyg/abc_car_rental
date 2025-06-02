@@ -2,10 +2,12 @@ import React, { useEffect, useState, useMemo } from "react";
 import {
   getTickets,
   addTicket,
-  closeTicket,
+  resolveTicket,
   updateTicket,
   getActiveTicketsByType,
   getActiveTickets,
+  getTicketByID,
+  deleteTicket,
 } from "../utils/localStorage";
 import TicketForm from "./TicketForm";
 import StatsPanel from "./StatsPanel";
@@ -31,9 +33,15 @@ const TicketList = () => {
     // Creates and saves new ticket to local memory
     const newTicket = addTicket(ticket);
 
-    // Update state
-    const updatedTickets = [...tickets, newTicket];
-    setTickets(updatedTickets);
+    // Update state ONLY if ticket type matches
+    // and user is viewing 'Active' tickets
+    if (
+      (newTicket.ticketType === ticketType || ticketType === "All") &&
+      status === "Active"
+    ) {
+      const updatedTickets = [...tickets, newTicket];
+      setTickets(updatedTickets);
+    }
     setShowModal(false);
   };
 
@@ -61,9 +69,35 @@ const TicketList = () => {
   };
 
   // Changes ticket status from "Active" to "Resolved"
-  const handleCloseTicket = (id) => {
-    closeTicket(id);
-    setTickets(getTickets());
+  const handleResolveTicket = (id) => {
+    try {
+      const ticket = getTicketByID(id);
+      if (ticket.status !== "Resolved") {
+        resolveTicket(id);
+        // Re-render list
+        setTickets(tickets.filter((t) => t.id !== id));
+        alert(`Successfully resolved ticket ${id}`);
+      } else {
+        // TODO: add logic to remove 'Mark as Resolved'
+        // button
+        alert(`Ticket ${id} has already been resolved!`);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // Deletes ticket from memory
+  const handleDeleteTicket = (id) => {
+    try {
+      const ticket = getTicketByID(id);
+      // Re-render list
+      setTickets(tickets.filter((t) => t.id !== id));
+      deleteTicket(id);
+      alert(`Successfully deleted ticket ${id}`);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   // Filters tickets by ticket type
@@ -77,8 +111,8 @@ const TicketList = () => {
           (t) => t.ticketType === event.target.value && t.status === status
         )
       );
-      setTicketType(event.target.value);
     }
+    setTicketType(event.target.value);
   };
 
   // Filters tickets by status
@@ -198,6 +232,7 @@ const TicketList = () => {
           {tickets.length === 0 && <p>No active tickets.</p>}
 
           {[...tickets]
+            .filter((t) => t.status === status)
             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
             .map((ticket) => (
               <div key={ticket.id} className="rental-card">
@@ -205,8 +240,11 @@ const TicketList = () => {
                 <button onClick={() => handleEditTicket(ticket.id)}>
                   Edit
                 </button>
-                <button onClick={() => handleCloseTicket(ticket.id)}>
-                  Close
+                <button onClick={() => handleResolveTicket(ticket.id)}>
+                  Mark as resolved
+                </button>
+                <button onClick={() => handleDeleteTicket(ticket.id)}>
+                  Delete
                 </button>
               </div>
             ))}
