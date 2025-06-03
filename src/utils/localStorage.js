@@ -10,47 +10,6 @@ export const getTicketByID = (id) => {
   return tickets.find((t) => t.id === id);
 };
 
-// Fetch all active tickets
-export const getActiveTickets = () => {
-  const tickets = getTickets();
-  return tickets ? tickets.filter((t) => t.status === "Active") : [];
-};
-
-// Fetch all resolved tickets
-export const getResolvedTickets = () => {
-  const tickets = getTickets();
-  return tickets ? tickets.filter((t) => t.status === "Resolved") : [];
-};
-
-// Fetch all active tickets by ticket type
-export const getActiveTicketsByType = (ticketType) => {
-  const ticketsStr = localStorage.getItem("tickets"); // String
-
-  if (ticketsStr.length < 1) return [];
-
-  let tickets = JSON.parse(ticketsStr);
-  if (!Array.isArray(tickets)) return [];
-
-  // Filter tickets obj
-  return tickets.filter(
-    (t) => t.status === "Active" && ticketType.includes(t.ticketType)
-  );
-};
-
-// Fetch all resolved tickets by ticket type
-export const getResolvedTicketsByType = (ticketType) => {
-  const ticketsStr = localStorage.getItem("tickets");
-
-  if (ticketsStr.length < 1) return [];
-
-  let tickets = JSON.parse(ticketsStr);
-  if (!Array.isArray(tickets)) return [];
-
-  return tickets.filter(
-    (t) => t.status === "Resolved" && ticketType.includes(t.ticketType)
-  );
-};
-
 // Save updated tickets to local storage
 export const saveTickets = (tickets) => {
   localStorage.setItem("tickets", JSON.stringify(tickets));
@@ -98,6 +57,18 @@ export const resolveTicket = (id) => {
 // Delete a ticket from memory
 export const deleteTicket = (id) => {
   const tickets = getTickets().filter((t) => t.id !== id);
+  saveTickets(tickets);
+};
+
+// Deletes all tickets from memory
+// with `status` and `ticketType` condition
+export const deleteAllTickets = (status, ticketType) => {
+  const tickets =
+    ticketType === "All"
+      ? getTickets().filter((t) => t.status !== status)
+      : getTickets().filter(
+          (t) => t.status !== status && t.ticketType !== ticketType
+        );
   saveTickets(tickets);
 };
 

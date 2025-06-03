@@ -3,11 +3,9 @@ import {
   getTickets,
   addTicket,
   resolveTicket,
-  updateTicket,
-  getActiveTicketsByType,
-  getActiveTickets,
   getTicketByID,
   deleteTicket,
+  deleteAllTickets,
 } from "../utils/localStorage";
 import TicketForm from "./TicketForm";
 import StatsPanel from "./StatsPanel";
@@ -25,7 +23,7 @@ const TicketList = () => {
   // Re-renders tickets list on state change
   useEffect(() => {
     const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
-    setTickets(storedTickets);
+    setTickets(storedTickets.filter((t) => t.status === "Active"));
   }, []);
 
   // Add a new rental
@@ -131,6 +129,23 @@ const TicketList = () => {
     setStatus(event.target.value);
   };
 
+  // Delete all tickets
+  const handleDeleteAllTickets = (status, ticketType) => {
+    const ticketCount = tickets.length;
+    if (ticketCount < 1) {
+      alert(`There are no tickets to delete!\nCount: ${ticketCount}`);
+      return;
+    }
+
+    try {
+      deleteAllTickets(status, ticketType);
+      setTickets([]);
+      alert(`Successfully deleted ${ticketCount} tickets!`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const fieldLabels = {
     rentalId: "Rental ID",
     vehicleId: "Vehicle ID",
@@ -176,43 +191,45 @@ const TicketList = () => {
         />
       </div>
       <div>
-        Active tickets: {tickets.filter((t) => t.status === "Active").length};
-      </div>
-      <div>
-        Resolved tickets:{" "}
-        {tickets.filter((t) => t.status === "Resolved").length};
+        <div>Ticket count: {tickets.length}</div>
+        <label>
+          Active or Resolved:
+          <select
+            name="isActive"
+            defaultValue="Active"
+            onChange={handleStatusChange}
+            multiple={false}
+          >
+            <option value="Active">Active</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </label>
+        <label>
+          Ticket type:
+          <select
+            name="ticketType"
+            defaultValue="All"
+            onChange={handleTicketTypeChange}
+            multiple={false}
+          >
+            <option value="All">All</option>
+            <option value="Price adjustment">Price adjustment</option>
+            <option value="EV charge">EV charge</option>
+            <option value="Miles">Miles</option>
+            <option value="Check-in">Check-in</option>
+          </select>
+        </label>
       </div>
 
       {tab === "tickets" && (
         <>
-          <button onClick={() => setShowModal(true)}>Add Ticket</button>
-          <label>
-            Active or Resolved:
-            <select
-              name="isActive"
-              defaultValue="Active"
-              onChange={handleStatusChange}
-              multiple={false}
-            >
-              <option value="Active">Active</option>
-              <option value="Resolved">Resolved</option>
-            </select>
-          </label>
-          <label>
-            Ticket type:
-            <select
-              name="ticketType"
-              defaultValue="All"
-              onChange={handleTicketTypeChange}
-              multiple={false}
-            >
-              <option value="All">All</option>
-              <option value="Price adjustment">Price adjustment</option>
-              <option value="EV charge">EV charge</option>
-              <option value="Miles">Miles</option>
-              <option value="Check-in">Check-in</option>
-            </select>
-          </label>
+          <button onClick={() => setShowModal(true)}>Create Ticket</button>
+          <button
+            className="delete-all"
+            onClick={() => handleDeleteAllTickets(status, ticketType)}
+          >
+            Delete All Tickets
+          </button>
 
           {showModal && (
             <TicketForm
@@ -240,7 +257,10 @@ const TicketList = () => {
                 <button onClick={() => handleEditTicket(ticket.id)}>
                   Edit
                 </button>
-                <button onClick={() => handleResolveTicket(ticket.id)}>
+                <button
+                  className="resolve-button"
+                  onClick={() => handleResolveTicket(ticket.id)}
+                >
                   Mark as resolved
                 </button>
                 <button onClick={() => handleDeleteTicket(ticket.id)}>

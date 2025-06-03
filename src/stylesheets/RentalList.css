@@ -12,6 +12,80 @@
     transform: translateY(-2px);
   }
   
+  /* General spacing and layout */
+label {
+  display: inline-block;
+  margin: 0.5rem 1rem 0.5rem 0;
+  font-weight: 500;
+}
+
+select {
+  margin-left: 0.5rem;
+  padding: 0.4rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f4f7fa;
+  font-size: 14px;
+  transition: border-color 0.2s ease-in-out;
+}
+
+select:focus {
+  outline: none;
+  border-color: #60a5fa; /* light blue border on focus */
+}
+
+/* Ticket count label */
+div:has(> select) {
+  margin-bottom: 1rem;
+}
+
+div:has(> select) > div {
+  font-weight: bold;
+  color: #374151; /* slate gray */
+  margin-bottom: 0.5rem;
+}
+
+/* Buttons */
+button {
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  background-color: #e5e7eb; /* light gray */
+  color: #111827;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #d1d5db;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Delete All Tickets — themed red */
+.delete-all {
+    background-color: #ffb3b3; /* Soft red */
+    color: #5a0000;
+}
+
+.delete-all:hover {
+  background-color: #dc2626; /* red-600 */
+}
+
+/* Mark as Resolved — Light Green */
+.resolve-button {
+  background-color: #d1fae5;  /* Light green */
+  color: #065f46;             /* Deep green text */
+}
+
+.resolve-button:hover {
+  background-color: #a7f3d0;
+}
+
   /* Header */
   h2 {
     color: #2a3f5f;
